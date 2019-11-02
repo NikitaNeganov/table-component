@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 import './TableStyles.module.scss';
 
-import Table from '../SubComponents/Table/Table';
+import Table from './Table/Table';
 
 const ClientSide = ({
   transList,
@@ -43,6 +43,7 @@ const ClientSide = ({
         accessor: 'linked_account.name',
       },
     ],
+    [],
   );
 
   return <Table data={transList} columns={columns} />;
