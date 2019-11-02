@@ -31,8 +31,6 @@ const Table = ({
     [],
   );
 
-  console.log(columns);
-
   const {
     getTableProps,
     getTableBodyProps,

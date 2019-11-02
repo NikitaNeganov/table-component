@@ -5,14 +5,19 @@ import * as actions from '../../store/actions';
 import './TableStyles.module.scss';
 
 import Table from './Table/Table';
+import Search from './Search/Search';
 
 const ClientSide = ({
   transList,
   fetchList,
+  filteredList,
 }) => {
+  let data = [];
+
   useEffect(() => {
     fetchList();
   }, []);
+
   //  Table column structure and props
   const columns = React.useMemo(
     () => [
@@ -45,12 +50,24 @@ const ClientSide = ({
     ],
     [],
   );
-
-  return <Table data={transList} columns={columns} />;
+  if (filteredList.length !== 0) {
+    console.log('filtered list used');
+    data = filteredList;
+  } else {
+    console.log('trans list used');
+    data = transList;
+  }
+  return (
+    <>
+      <Search />
+      <Table data={data} columns={columns} />
+    </>
+  );
 };
 
 const mapStateToProps = (state) => ({
   transList: state.transList,
+  filteredList: state.filteredList,
 });
 
 const mapDispatchToProps = (dispatch) => ({

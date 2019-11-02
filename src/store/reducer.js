@@ -2,6 +2,7 @@ import * as actionTypes from './actionTypes';
 
 const initState = {
   transList: [],
+  filteredList: [],
 };
 
 const reducer = (state = initState, action) => {
@@ -10,6 +11,12 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         transList: action.transList,
+      };
+    }
+    case actionTypes.FILTER_LIST: {
+      return {
+        ...state,
+        filteredList: action.filteredList,
       };
     }
     default: return (state);
