@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import resolvePath from 'object-resolve-path';
 
 import * as actions from '../../store/actions';
 import './TableStyles.module.scss';
@@ -7,7 +8,7 @@ import './TableStyles.module.scss';
 import Table from './Table/Table';
 
 
-const SEARCH_PARAMS = ['id', 'creationDate', 'type', 'name', 'amount'];
+const SEARCH_PARAMS = ['id', 'creationDate', 'type', 'linked_account.name', 'amount'];
 
 const ClientSide = ({
   transList,
@@ -22,8 +23,8 @@ const ClientSide = ({
 
   useEffect(() => {
     if (searchValue) {
-      const filteredData = data.filter((transaction) => {
-        const values = SEARCH_PARAMS.map((param) => transaction[param]).join(' ');
+      const filteredData = transList.filter((transaction) => {
+        const values = SEARCH_PARAMS.map((param) => resolvePath(transaction, param)).join(' ');
         return values.toLowerCase().includes(searchValue.toLowerCase());
       });
 
@@ -70,7 +71,7 @@ const ClientSide = ({
       },
       {
         Header: 'Linked account',
-        accessor: 'name',
+        accessor: 'linked_account.name',
       },
     ],
     [],
