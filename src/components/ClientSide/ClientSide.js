@@ -1,18 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import * as actions from '../../store/actions';
 import './TableStyles.module.scss';
 
 import Table from './Table/Table';
-import Search from './Search/Search';
+
+
+const SEARCH_PARAMS = ['id', 'creationDate', 'type', 'name', 'amount'];
 
 const ClientSide = ({
   transList,
   fetchList,
-  filteredList,
 }) => {
-  let data = [];
+  const [searchValue, setSearchValue] = useState('');
+  const [data, setData] = useState(transList);
+
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  useEffect(() => {
+    if (searchValue) {
+      const filteredData = data.filter((transaction) => {
+        const values = SEARCH_PARAMS.map((param) => transaction[param]).join(' ');
+        return values.toLowerCase().includes(searchValue.toLowerCase());
+      });
+
+      setData(filteredData);
+    } else {
+      setData(transList);
+    }
+  }, [searchValue]);
+
+  useEffect(() => {
+    if (transList.length) {
+      setData(transList);
+    }
+  }, [transList]);
 
   useEffect(() => {
     fetchList();
@@ -45,21 +70,20 @@ const ClientSide = ({
       },
       {
         Header: 'Linked account',
-        accessor: 'linked_account.name',
+        accessor: 'name',
       },
     ],
     [],
   );
-  if (filteredList.length !== 0) {
-    console.log('filtered list used');
-    data = filteredList;
-  } else {
-    console.log('trans list used');
-    data = transList;
-  }
+
   return (
     <>
-      <Search />
+      <input
+        type="text"
+        name="searchInput"
+        value={searchValue || ''}
+        onChange={handleSearch}
+      />
       <Table data={data} columns={columns} />
     </>
   );
@@ -67,7 +91,6 @@ const ClientSide = ({
 
 const mapStateToProps = (state) => ({
   transList: state.transList,
-  filteredList: state.filteredList,
 });
 
 const mapDispatchToProps = (dispatch) => ({
